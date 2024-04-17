@@ -14,7 +14,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PatientRequest {
-    private String name;
     private String firstName;
     private String lastName;
     private String phone;

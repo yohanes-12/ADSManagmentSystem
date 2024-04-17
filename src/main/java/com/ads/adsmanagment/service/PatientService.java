@@ -21,4 +21,5 @@ public interface PatientService {
     public void deletePatient(Long id);
 
     List<AddressResponse> getPatientAddress();
+
 }

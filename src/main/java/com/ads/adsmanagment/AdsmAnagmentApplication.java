@@ -1,8 +1,7 @@
 package com.ads.adsmanagment;
 
-import com.ads.adsmanagment.dto.request.AddressRequest;
-import com.ads.adsmanagment.dto.request.DentistRequest;
-import com.ads.adsmanagment.dto.request.PatientRequest;
+import com.ads.adsmanagment.dto.request.*;
+import com.ads.adsmanagment.dto.response.AddressResponse;
 import com.ads.adsmanagment.model.*;
 import com.ads.adsmanagment.service.AppointementService;
 import com.ads.adsmanagment.service.DentistService;
@@ -44,36 +43,26 @@ public class AdsmAnagmentApplication implements CommandLineRunner {
         DentistRequest dentist = new DentistRequest( "Dr. John", "Doe", "43424234242","jhone@gmail.com");
         dentistService.addDentist(dentist);
 
-//        System.out.println("Creating new  Patient ");
-//        PatientRequest patientRequest = new PatientRequest(null, "John", "Doe", "43424234242", "jhone@gmail.com", LocalDateTime.now(), new AddressRequest("3th st", "london", "uk" ));
-//        patientService.addPatient(patientRequest);
-//
-//        System.out.println("Creating new  Surgery ");
-//        Surgery surgery = new Surgery(null, "pending", LocalDateTime.now(), new Address("3th st", "london", "uk" ), null);
-//        surgeryService.addSurgery(surgery);
-//
-//        System.out.println("Creating new  Appointment ");
-//        Appointment appointment = new Appointment(null, LocalDateTime.now(), "london", dentist, patient, surgery);
-//        appointementService.addAppointment(appointment);
-//
-//
-//        System.out.println("list of all appointments");
-//        appointementService.getAllAppointments().forEach(System.out::println);
-//
-//        System.out.println("list of all appointments by patient id");
-//        appointementService.getAppointmentsByPatientId(1L).forEach(System.out::println);
-//
-//        System.out.println("list of all appointments by dentist id");
-//        appointementService.getAppointmentsByDentistId(1L).forEach(System.out::println);
-//
-//        System.out.println("list of all appointments by date");
-//        appointementService.getAppointmentsByDate(LocalDate.now()).forEach(System.out::println);
-//
-//        System.out.println("update appointment");
-//        appointment.setAppointmentDate(LocalDateTime.now());
-//
-//        System.out.println("delete appointment by id");
-//        appointementService.deleteAppointment(1L);
+
+        System.out.println("Creating new  Patient ");
+        PatientRequest patientRequest = new PatientRequest("John", "Doe", "43424234242", "jhone@gmail.com", LocalDateTime.now(), new AddressRequest("3th st", "london", "uk" ));
+        patientService.addPatient(patientRequest);
+
+
+        System.out.println("Creating new  Surgery ");
+        SurgeryRequest surgeryRequest = new SurgeryRequest("surgery 1", "kidny",LocalDateTime.of(2024,05,05,05,20), new AddressRequest("3th st", "london", "uk"), null);
+        surgeryService.addSurgery(surgeryRequest);
+
+        System.out.println("Creating new  Appointment ");
+        AppointmentRequest appointmentRequest = new AppointmentRequest(LocalDateTime.now(), "london",  1L, 1L, 1L);
+        appointementService.addAppointment(appointmentRequest);
+
+
+        System.out.println("Hello RESTful Web API");
+        System.out.println("ADS Managment WebAPI server. Starting...");
+        System.out.println("ADS WebAPI server. Started.\nRunning Apache Tomcat service and Listening for HTTP Request on Port number, 8080");
+        System.out.println("To see list of Patient, send HTTP GET Request to the URI,\nhttp://localhost:8080/adsweb/api/v1/patient/list");
+
 
 
     }

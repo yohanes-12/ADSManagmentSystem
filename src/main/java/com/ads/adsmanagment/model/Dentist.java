@@ -18,7 +18,7 @@ public class Dentist {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long dentist_id;
+    private Long dentistId;
     private String firstName;
     private String lastName;
     private String dentistPhone;

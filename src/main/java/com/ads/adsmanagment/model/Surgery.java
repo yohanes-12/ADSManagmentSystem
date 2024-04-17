@@ -11,16 +11,17 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "surgery")
+@Table(name = "surgerys")
 public class Surgery {
     @Id
-    private Long recordId;
-    private    String description;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long surgeryId;
+
+    private String description;
     private String type;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
@@ -31,6 +32,5 @@ public class Surgery {
 
     @OneToMany(mappedBy = "appoint_id")
     private List<Appointment> appointment_fk;
-
 
 }

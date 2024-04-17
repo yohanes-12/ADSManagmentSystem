@@ -20,6 +20,6 @@ public class DentistServiceImp implements DentistService {
         Dentist newDentist = new Dentist(null, dentist.firstName(), dentist.lastName(), dentist.email(), dentist.dentistPhone(), null);
 
         dentistRepository.save(newDentist);
-        return new DentistResponse(newDentist.getDentist_id(), newDentist.getFirstName(), newDentist.getLastName(), newDentist.getEmail(), newDentist.getDentistPhone(), null);
+        return new DentistResponse(newDentist.getDentistId(), newDentist.getFirstName(), newDentist.getLastName(), newDentist.getEmail(), newDentist.getDentistPhone(), null);
     }
 }
