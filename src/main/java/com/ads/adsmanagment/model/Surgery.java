@@ -20,16 +20,16 @@ import java.util.List;
 public class Surgery {
     @Id
     private Long recordId;
-    private String paymentStatus;
+    private    String description;
+    private String type;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime surgeryDate;
 
-
     @Embedded
     private Address address;
 
-    @OneToMany(mappedBy = "appointment_fk")
+    @OneToMany(mappedBy = "appoint_id")
     private List<Appointment> appointment_fk;
 
 

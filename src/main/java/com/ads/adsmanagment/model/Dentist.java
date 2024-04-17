@@ -24,7 +24,7 @@ public class Dentist {
     private String dentistPhone;
     private String email;
 
-    @OneToMany(mappedBy = "appointment_fk")
+    @OneToMany(mappedBy = "appoint_id")
     private List<Appointment> appointment;
 
 

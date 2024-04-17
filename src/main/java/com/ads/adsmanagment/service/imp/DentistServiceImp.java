@@ -1,5 +1,7 @@
 package com.ads.adsmanagment.service.imp;
 
+import com.ads.adsmanagment.dto.request.DentistRequest;
+import com.ads.adsmanagment.dto.response.DentistResponse;
 import com.ads.adsmanagment.model.Dentist;
 import com.ads.adsmanagment.repository.DentistRepository;
 import com.ads.adsmanagment.service.DentistService;
@@ -14,7 +16,10 @@ public class DentistServiceImp implements DentistService {
     }
 
     @Override
-    public Dentist addDentist(Dentist dentist) {
-       return dentistRepository.save(dentist);
+    public DentistResponse addDentist(DentistRequest dentist) {
+        Dentist newDentist = new Dentist(null, dentist.firstName(), dentist.lastName(), dentist.email(), dentist.dentistPhone(), null);
+
+        dentistRepository.save(newDentist);
+        return new DentistResponse(newDentist.getDentist_id(), newDentist.getFirstName(), newDentist.getLastName(), newDentist.getEmail(), newDentist.getDentistPhone(), null);
     }
 }

@@ -32,7 +32,7 @@ public class Patient {
     @Embedded
     private Address address;
 
-    @OneToMany(mappedBy = "appointment_fk")
+    @OneToMany(mappedBy = "appoint_id")
     private List<Appointment> appointmentList;
 
 
