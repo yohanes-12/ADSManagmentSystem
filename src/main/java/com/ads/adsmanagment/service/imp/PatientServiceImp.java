@@ -7,7 +7,6 @@ import com.ads.adsmanagment.dto.response.AppointmentResponse;
 import com.ads.adsmanagment.dto.response.PatientResponse;
 import com.ads.adsmanagment.model.Address;
 import com.ads.adsmanagment.model.Patient;
-import com.ads.adsmanagment.repository.AppointmentRepository;
 import com.ads.adsmanagment.repository.PatientRepository;
 import com.ads.adsmanagment.service.PatientService;
 import org.springframework.stereotype.Service;
@@ -22,23 +21,22 @@ public class PatientServiceImp  implements PatientService {
 
     private PatientRepository patientRepository;
 
-
-    public PatientServiceImp (PatientRepository patientRepository){
+    public PatientServiceImp(PatientRepository patientRepository) {
         this.patientRepository = patientRepository;
     }
     @Override
     public PatientResponse addPatient(PatientRequest patientRequest) {
         Patient savedPatient = new Patient(
                 null,
-                patientRequest.getFirstName(),
-                patientRequest.getLastName(),
-                patientRequest.getEmail(),
-                patientRequest.getPhone(),
-                patientRequest.getDob(),
-                new Address(patientRequest.getAddress().getStreet(),
-                        patientRequest.getAddress().getCity(),
-                        patientRequest.getAddress().getCountry()),null
-        );
+                patientRequest.firstName(),
+                patientRequest.lastName(),
+                patientRequest.email(),
+                patientRequest.phone(),
+                patientRequest.dob(),
+                new Address( patientRequest.address().street(),
+                        patientRequest.address().city(),
+                        patientRequest.address().country()),
+                null);
         patientRepository.save(savedPatient);
 
         return new PatientResponse(
@@ -49,6 +47,7 @@ public class PatientServiceImp  implements PatientService {
                 savedPatient.getPhone(),
                 savedPatient.getDob(),
                 new AddressResponse(
+                        savedPatient.getPatientId(),
                         savedPatient.getAddress().getStreet(),
                         savedPatient.getAddress().getCity(),
                         savedPatient.getAddress().getCountry()
@@ -60,9 +59,9 @@ public class PatientServiceImp  implements PatientService {
                                 a.getAppoint_id(),
                                 a.getAppointmentDate(),
                                 a.getLocation(),
-                                a.getDentist_fk().getDentistId() ,
-                                a.getPatient_fk().getPatientId(),
-                                a.getSurgery_fk().getSurgeryId()
+                                a.getDentist_fk().getFirstName() + a.getDentist_fk().getLastName(),
+                                a.getPatient_fk().getFirstName() + a.getPatient_fk().getLastName(),
+                                a.getSurgery_fk().getDescription()
                         )).toList()
         );
     }
@@ -76,6 +75,7 @@ public class PatientServiceImp  implements PatientService {
                 p.getEmail(),
                 p.getDob(),
                 new AddressResponse(
+                        p.getAddress().getAddressId(),
                         p.getAddress().getStreet(),
                         p.getAddress().getCity(),
                         p.getAddress().getCountry()
@@ -86,9 +86,9 @@ public class PatientServiceImp  implements PatientService {
                                 a.getAppoint_id(),
                                 a.getAppointmentDate(),
                                 a.getLocation(),
-                                Optional.ofNullable(a.getDentist_fk()).map(d -> d.getDentistId()).orElse(null),
-                                Optional.ofNullable(a.getPatient_fk()).map(p1 -> p1.getPatientId()).orElse(null),
-                                Optional.ofNullable(a.getSurgery_fk()).map(s -> s.getSurgeryId()).orElse(null)
+                                Optional.ofNullable(a.getDentist_fk()).map(d -> d.getFirstName()+d.getLastName()).orElse(null),
+                                Optional.ofNullable(a.getPatient_fk()).map(p1 -> p1.getFirstName() + p1.getLastName()).orElse(null),
+                                Optional.ofNullable(a.getSurgery_fk()).map(s -> s.getDescription()).orElse(null)
                         )).toList()
         )).collect(Collectors.toList());
     }
@@ -103,18 +103,18 @@ public class PatientServiceImp  implements PatientService {
                 p.getEmail(),
                 p.getDob(),
                 new AddressResponse(
+                        p.getAddress().getAddressId(),
                         p.getAddress().getStreet(),
                         p.getAddress().getCity(),
                         p.getAddress().getCountry()
-                ),
-                p.getAppointmentList().stream().map(a -> new AppointmentResponse(
+                ), Optional.ofNullable(p.getAppointmentList()).orElse(List.of()).stream().map(a -> new AppointmentResponse(
                         a.getAppoint_id(),
                         a.getAppointmentDate(),
                         a.getLocation(),
-                        a.getDentist_fk().getDentistId(),
-                        a.getPatient_fk().getPatientId(),
-                        a.getSurgery_fk().getSurgeryId())
-                ).toList())).orElse(null);
+                        Optional.ofNullable(a.getDentist_fk()).map(d -> d.getFirstName()+d.getLastName()).orElse(null),
+                Optional.ofNullable(a.getPatient_fk()).map(p1 -> p1.getFirstName() + p1.getLastName()).orElse(null),
+                Optional.ofNullable(a.getSurgery_fk()).map(s -> s.getDescription()).orElse(null) )).toList()
+        )).orElse(null);
     }
 
     @Override
@@ -125,14 +125,14 @@ public class PatientServiceImp  implements PatientService {
             return null;
         }
 
-        patient.get().setFirstName(patientrequest.getFirstName());
-        patient.get().setLastName(patientrequest.getLastName());
-        patient.get().setEmail(patientrequest.getEmail());
-        patient.get().setPhone(patientrequest.getPhone());
-        patient.get().setDob(patientrequest.getDob());
-        patient.get().setAddress(new Address(patientrequest.getAddress().getStreet(),
-                patientrequest.getAddress().getCity(),
-                patientrequest.getAddress().getCountry()));
+        patient.get().setFirstName(patientrequest.firstName());
+        patient.get().setLastName(patientrequest.lastName());
+        patient.get().setEmail(patientrequest.email());
+        patient.get().setPhone(patientrequest.phone());
+        patient.get().setDob(patientrequest.dob());
+        patient.get().getAddress().setStreet(patientrequest.address().street());
+        patient.get().getAddress().setCity(patientrequest.address().city());
+        patient.get().getAddress().setCountry(patientrequest.address().country());
         patientRepository.save(patient.get());
 
         return new PatientResponse(
@@ -143,6 +143,7 @@ public class PatientServiceImp  implements PatientService {
                 patient.get().getPhone(),
                 patient.get().getDob(),
                 new AddressResponse(
+                        patient.get().getAddress().getAddressId(),
                         patient.get().getAddress().getStreet(),
                         patient.get().getAddress().getCity(),
                         patient.get().getAddress().getCountry()
@@ -151,9 +152,9 @@ public class PatientServiceImp  implements PatientService {
                         a.getAppoint_id(),
                         a.getAppointmentDate(),
                         a.getLocation(),
-                        a.getDentist_fk().getDentistId(),
-                        a.getPatient_fk().getPatientId(),
-                        a.getSurgery_fk().getSurgeryId())
+                        a.getDentist_fk().getFirstName() + a.getDentist_fk().getLastName(),
+                        a.getPatient_fk().getFirstName() + a.getPatient_fk().getLastName(),
+                        a.getSurgery_fk().getDescription())
                 ).toList()
         );
     }
@@ -166,13 +167,10 @@ public class PatientServiceImp  implements PatientService {
     @Override
     public List<AddressResponse> getPatientAddress() {
         return patientRepository.findAll().stream().map(p -> new AddressResponse(
+                p.getAddress().getAddressId(),
                 p.getAddress().getStreet(),
                 p.getAddress().getCity(),
                 p.getAddress().getCountry()
         )).collect(Collectors.toList());
     }
-
-
-
-
 }

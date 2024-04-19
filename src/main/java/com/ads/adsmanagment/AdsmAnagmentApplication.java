@@ -7,6 +7,7 @@ import com.ads.adsmanagment.service.AppointementService;
 import com.ads.adsmanagment.service.DentistService;
 import com.ads.adsmanagment.service.PatientService;
 import com.ads.adsmanagment.service.SurgeryService;
+import jakarta.transaction.Transactional;
 import org.aspectj.apache.bcel.generic.MULTIANEWARRAY;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -38,6 +39,7 @@ public class AdsmAnagmentApplication implements CommandLineRunner {
     }
 
     @Override
+    @Transactional
     public void run(String... args) throws Exception {
         System.out.println("Creating new  Dentiest ");
         DentistRequest dentist = new DentistRequest( "Dr. John", "Doe", "43424234242","jhone@gmail.com");

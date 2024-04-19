@@ -6,6 +6,8 @@ import com.ads.adsmanagment.dto.response.PatientResponse;
 import com.ads.adsmanagment.model.Address;
 import com.ads.adsmanagment.model.Patient;
 import com.ads.adsmanagment.service.PatientService;
+import com.ads.adsmanagment.service.imp.AddressServiceImp;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,15 +16,13 @@ import java.util.List;
 @RequestMapping("/adsweb/api/v1/address")
 public class AddressController {
 
-    private PatientService patientService;
+    private AddressServiceImp addressServiceImp;
 
-    public AddressController(PatientService patientService) {
-        this.patientService = patientService;
+    public AddressController(AddressServiceImp addressServiceImp) {
+        this.addressServiceImp = addressServiceImp;
     }
-
     @GetMapping(value = "/list")
-    public List<AddressResponse> getAllPatientList() {
-        return patientService.getPatientAddress();
-
+    public ResponseEntity<List<AddressResponse>> getAllPatientList() {
+        return ResponseEntity.ok(addressServiceImp.getAddresses());
     }
 }

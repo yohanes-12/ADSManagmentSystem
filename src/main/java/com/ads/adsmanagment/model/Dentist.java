@@ -24,8 +24,16 @@ public class Dentist {
     private String dentistPhone;
     private String email;
 
-    @OneToMany(mappedBy = "appoint_id")
+    @OneToMany(mappedBy = "dentist_fk", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Appointment> appointment;
+
+    public Dentist(Long dentistId,String firstName, String lastName, String dentistPhone, String email) {
+        this.dentistId = dentistId;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.dentistPhone = dentistPhone;
+        this.email = email;
+    }
 
 
 }

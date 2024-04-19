@@ -1,8 +1,7 @@
 package com.ads.adsmanagment.repository;
 
 import com.ads.adsmanagment.model.Patient;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.ListCrudRepository;
 
-import java.util.List;
-
-public interface PatientRepository extends JpaRepository<Patient, Long>{}
+public interface PatientRepository extends ListCrudRepository<Patient, Long> {
+}

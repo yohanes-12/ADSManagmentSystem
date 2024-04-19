@@ -1,9 +1,7 @@
 package com.ads.adsmanagment.repository;
 
 import com.ads.adsmanagment.model.Surgery;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.repository.ListCrudRepository;
 
-@Repository
-public interface SurgeryRepository extends JpaRepository<Surgery, Long> {
+public interface SurgeryRepository extends ListCrudRepository<Surgery, Long> {
 }

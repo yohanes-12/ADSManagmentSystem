@@ -4,12 +4,17 @@ import com.ads.adsmanagment.dto.request.AppointmentRequest;
 import com.ads.adsmanagment.dto.response.AppointmentResponse;
 import com.ads.adsmanagment.model.Appointment;
 import com.ads.adsmanagment.model.Dentist;
+import com.ads.adsmanagment.model.Patient;
+import com.ads.adsmanagment.model.Surgery;
 import com.ads.adsmanagment.repository.AppointmentRepository;
 import com.ads.adsmanagment.repository.DentistRepository;
 import com.ads.adsmanagment.repository.PatientRepository;
 import com.ads.adsmanagment.repository.SurgeryRepository;
 import com.ads.adsmanagment.service.AppointementService;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class AppointmentServeiceImp implements AppointementService {
@@ -29,13 +34,23 @@ public class AppointmentServeiceImp implements AppointementService {
     }
 
     @Override
+    @Transactional
     public AppointmentResponse addAppointment(AppointmentRequest appointment) {
-        Appointment newAppointment = new Appointment(null, appointment.getAppointmentDate(),appointment.getLocation(),
-                dentistRepository.findById(appointment.getDentistId()).orElse(null),
-                patientRepository.findById(appointment.getPatientId()).orElse(null),
-                surgeryRepository.findById(appointment.getSurgeryId()).orElse(null));
-        appointmentRepository.save(newAppointment);
-        return new AppointmentResponse(newAppointment.getAppoint_id(), newAppointment.getAppointmentDate(), newAppointment.getLocation(), newAppointment.getDentist_fk().getDentistId(), newAppointment.getPatient_fk().getPatientId(), newAppointment.getSurgery_fk().getSurgeryId());
-    }
+        if(dentistRepository.findById(appointment.dentistId()).isEmpty() || patientRepository.findById(appointment.patientId()).isEmpty() || surgeryRepository.findById(appointment.surgeryId()).isEmpty()){
+            return null;
+        }
 
+        System.out.printf("dentistId: %d, patientId: %d, surgeryId: %d\n", appointment.dentistId(), appointment.patientId(), appointment.surgeryId());
+        Optional<Dentist> dentistOptional = dentistRepository.findById(appointment.dentistId());
+        Optional<Patient> patientOptional = patientRepository.findById(appointment.patientId());
+        Optional<Surgery> surgeryOptional = surgeryRepository.findById(appointment.surgeryId());
+
+        if (dentistOptional.isPresent() && patientOptional.isPresent() && surgeryOptional.isPresent()){
+
+            Appointment newAppointment = new Appointment(null, appointment.appointmentDate(), appointment.location(), dentistOptional.get(), patientOptional.get(), surgeryOptional.get());
+            appointmentRepository.save(newAppointment);
+            return new AppointmentResponse(newAppointment.getAppoint_id(), newAppointment.getAppointmentDate(), newAppointment.getLocation(), newAppointment.getDentist_fk().getFirstName() + newAppointment.getDentist_fk().getLastName(), newAppointment.getPatient_fk().getFirstName() + newAppointment.getPatient_fk().getLastName(), newAppointment.getSurgery_fk().getDescription());
+        }
+        return null;
+    }
 }

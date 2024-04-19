@@ -27,10 +27,18 @@ public class Surgery {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime surgeryDate;
 
-    @Embedded
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "address_id")
     private Address address;
 
-    @OneToMany(mappedBy = "appoint_id")
+    @OneToMany(mappedBy = "surgery_fk", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Appointment> appointment_fk;
 
+    public Surgery(Long surgeryId, String description, String type, LocalDateTime surgeryDate, Address address) {
+        this.surgeryId = surgeryId;
+        this.description = description;
+        this.type = type;
+        this.surgeryDate = surgeryDate;
+        this.address = address;
+    }
 }

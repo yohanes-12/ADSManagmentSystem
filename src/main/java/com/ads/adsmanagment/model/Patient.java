@@ -29,11 +29,21 @@ public class Patient {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime dob;
 
-    @Embedded
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "address_id")
     private Address address;
 
-    @OneToMany(mappedBy = "appoint_id")
+    @OneToMany(mappedBy = "patient_fk", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Appointment> appointmentList;
 
+    public Patient(Long patientId, String firstName, String lastName, String phone, String email, LocalDateTime dob, Address address) {
+        this.patientId = patientId;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phone = phone;
+        this.email = email;
+        this.dob = dob;
+        this.address = address;
 
+    }
 }

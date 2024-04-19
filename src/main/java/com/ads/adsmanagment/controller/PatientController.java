@@ -4,6 +4,9 @@ import com.ads.adsmanagment.dto.request.PatientRequest;
 import com.ads.adsmanagment.dto.response.PatientResponse;
 import com.ads.adsmanagment.model.Patient;
 import com.ads.adsmanagment.service.PatientService;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,28 +23,28 @@ public class PatientController {
     }
 
     @GetMapping(value = "/list")
-    public List<PatientResponse> getAllPatientList() {
-       return patientService.getAllPatients();
+    public ResponseEntity<List<PatientResponse>> getAllPatientList() {
+       return ResponseEntity.ok(patientService.getAllPatients());
     }
 
     @GetMapping(value = "/get/{patientId}")
-    public PatientResponse getPatientById(Long patientId){
-        return patientService.getPatientById(patientId);
+    public ResponseEntity<PatientResponse> getPatientById(@Valid Long patientId){
+        return ResponseEntity.ok(patientService.getPatientById(patientId));
 }
 
 
     @PostMapping(value = "/register")
-    public PatientResponse registerNewPatient(PatientRequest patientRequest) {
-        return patientService.addPatient(patientRequest);
+    public ResponseEntity<PatientResponse> registerNewPatient(@Valid @RequestBody PatientRequest patientRequest) {
+        return new ResponseEntity<>(patientService.addPatient(patientRequest), HttpStatus.CREATED);
     }
 
     @PostMapping(value = "/update/{patientId}")
-    public PatientResponse updatePatient(Long patientId, PatientRequest patientrequest) {
-        return patientService.updatePatient(patientId, patientrequest);
+    public ResponseEntity<PatientResponse> updatePatient(@Valid  Long patientId, @Valid @RequestBody PatientRequest patientrequest) {
+        return ResponseEntity.ok(patientService.updatePatient(patientId, patientrequest));
     }
 
     @DeleteMapping(value = "/delete/{patientId}")
-    public void deletePatient(Long patientId) {
+    public void deletePatient(@Valid Long patientId) {
         patientService.deletePatient(patientId);
     }
 
