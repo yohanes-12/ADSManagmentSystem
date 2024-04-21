@@ -10,7 +10,6 @@ import io.jsonwebtoken.security.Keys;
 
 import javax.crypto.SecretKey;
 import java.time.Instant;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -44,18 +43,14 @@ public class JWTMgmtUtilityService {
 
     private String createToken(Map<String, Object> claims, String subject) {
         var now = Instant.now();
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.HOUR, 24);
         return Jwts.builder()
                 .claims()
                 .subject(subject)
                 .add(claims)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis()+1000*60*60*10))
-//                .issuedAt(Date.from(now))
-                .setIssuedAt(new Date())
-                .setExpiration(calendar.getTime())
-//                .expiration(Date.from(now.plus(24, ChronoUnit.HOURS)))
+                .issuedAt(Date.from(now))
+                .expiration(Date.from(now.plus(24, java.time.temporal.ChronoUnit.HOURS)))
                 .and()
                 .signWith(getSignKey())
                 .compact();
